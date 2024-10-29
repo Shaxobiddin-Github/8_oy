@@ -8,6 +8,7 @@ from rest_framework import filters
 
 from .models import Food, FoodType, Comment,Review
 from .serializers import FoodTypeSerializer, FoodSerializer, CommentSerializer, UserSerializer,ReviewSerializer
+from .throttles import FoodAnonThrottle, FoodAnonRateThrottle2
 
 
 class FoodTypeViewSet(viewsets.ModelViewSet):
@@ -16,6 +17,15 @@ class FoodTypeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
+    throttle_scope = [FoodAnonThrottle]
+
+class FoodTypeViewSet2(viewsets.ModelViewSet):
+    queryset = FoodType.objects.all()
+    serializer_class = FoodTypeSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    throttle_scope = [FoodAnonRateThrottle2]
+
 
 
 class FoodViewSet(viewsets.ModelViewSet):
@@ -27,6 +37,11 @@ class FoodViewSet(viewsets.ModelViewSet):
     ordering_fields = ['price', 'food_type']
     ordering = ['food_type']
 
+class FoodViewSet2(viewsets.ModelViewSet):
+    queryset = Food.objects.all()
+    serializer_class = FoodSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
@@ -36,7 +51,10 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-
+class CommentViewSet2(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class ReviewViewset(viewsets.ModelViewSet):
     queryset = Review.objects.all()
@@ -50,7 +68,10 @@ class ReviewViewset(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-
+class ReviewViewset2(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class RegisterView(viewsets.GenericViewSet):
     queryset = User.objects.all()
