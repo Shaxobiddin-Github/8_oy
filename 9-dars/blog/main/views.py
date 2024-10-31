@@ -9,6 +9,7 @@ from rest_framework import filters
 from .models import Food, FoodType, Comment,Review
 from .serializers import FoodTypeSerializer, FoodSerializer, CommentSerializer, UserSerializer,ReviewSerializer
 from .throttles import FoodAnonThrottle, FoodAnonRateThrottle2
+from .paginations import FoodsPagenations
 
 
 class FoodTypeViewSet(viewsets.ModelViewSet):
@@ -24,7 +25,7 @@ class FoodTypeViewSet2(viewsets.ModelViewSet):
     serializer_class = FoodTypeSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
-    throttle_scope = [FoodAnonRateThrottle2]
+   
 
 
 
@@ -36,11 +37,14 @@ class FoodViewSet(viewsets.ModelViewSet):
     search_fields = ['name']
     ordering_fields = ['price', 'food_type']
     ordering = ['food_type']
+    
 
 class FoodViewSet2(viewsets.ModelViewSet):
     queryset = Food.objects.all()
     serializer_class = FoodSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    pagination_class = FoodsPagenations
+    throttle_scope = [FoodAnonRateThrottle2]
 
 
 class CommentViewSet(viewsets.ModelViewSet):

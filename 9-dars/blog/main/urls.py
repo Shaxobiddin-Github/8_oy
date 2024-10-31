@@ -29,4 +29,5 @@ router_v2.register(r'reviews', ReviewViewset2, basename='reviews')
 urlpatterns = [
     path('v1/', include(router_v1.urls)),
     path('v2/', include(router_v2.urls)),
+    path('api-auth/', include('rest_framework.urls')),  
 ]
